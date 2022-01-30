@@ -11,7 +11,7 @@ import SpriteKit
 public class Skeleton: SKNode {
     
     /**
-     Closure that is called each time an event animation is triggered.
+     Cloasure that is called each time an event animation is triggered.
      The events represented by the 'EventModel' model
      
      See more information about events:
@@ -66,15 +66,28 @@ public class Skeleton: SKNode {
      */
     public convenience init?(fromJSON name: String, atlas folder: String? = nil, skin: String? = nil) {
         
-        guard let url = Bundle.main.url(forResource: name, withExtension: "json"),
-              let json = try? Data(contentsOf: url),
-              let model = try? JSONDecoder().decode(SpineModel.self, from: json) else {
-                
+//        guard let url = Bundle.main.url(forResource: name, withExtension: "json"),
+//              let json = try? Data(contentsOf: url),
+//              let model = try? JSONDecoder().decode(SpineModel.self, from: json) else {
+//
+//                return nil
+//        }
+        if let url = Bundle.main.url(forResource: name, withExtension: "json"),
+           let json = try? Data(contentsOf: url) {
+            do {
+                let model = try JSONDecoder().decode(SpineModel.self, from: json)
+                self.init(model, atlas: folder)
+                applySkin(named: skin)
+            } catch let error {
+                print("[spine]error: \(error)")
                 return nil
+            }
+        } else {
+            return nil
         }
         
-        self.init(model, atlas: folder)
-        applySkin(named: skin)
+//        self.init(model, atlas: folder)
+//        applySkin(named: skin)
     }
     
     required public init?(coder aDecoder: NSCoder) {
@@ -152,4 +165,5 @@ public class Skeleton: SKNode {
         })
     }
 }
+
 

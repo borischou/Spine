@@ -303,3 +303,4 @@ extension SlotModel: Decodable {
         self.init(name, bone, color, dark, attachment, blend)
     }
 }
+

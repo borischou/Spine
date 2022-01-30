@@ -501,6 +501,13 @@ struct BoneKeyframeRotateModel: BoneKeyframeModel {
         self.angle = angle ?? 0
     }
     
+    init(_ time: TimeInterval?, _ curve: [Float]?, _ angle: CGFloat?) {
+        
+        self.time = time ?? 0
+        self.curve = CurveModelType(curve ?? [0, 0, 0, 0])
+        self.angle = angle ?? 0
+    }
+    
     // bezier curve init
     init(_ time: TimeInterval?, _ curve: CurveModelType.BezierCurveModel, _ angle: CGFloat?) {
         
@@ -539,8 +546,12 @@ extension BoneKeyframeRotateModel: Decodable {
             
         } catch {
             
-            let curve: String? = try container.decodeIfPresent(String.self, forKey: .curve)
-            self.init(time, curve, angle)
+            if let curve: String = try? container.decodeIfPresent(String.self, forKey: .curve) {
+                self.init(time, curve, angle)
+            } else {
+                let curve: [Float]? = try container.decodeIfPresent([Float].self, forKey: .curve)
+                self.init(time, curve, angle)
+            }
         }
     }
 }
@@ -557,6 +568,13 @@ struct BoneKeyframeTranslateModel: BoneKeyframeModel {
         
         self.time = time ?? 0
         self.curve = CurveModelType(curve)
+        self.position = CGPoint(x: x ?? 0, y: y ?? 0)
+    }
+    
+    init(_ time: TimeInterval?, _ curve: [Float]?, _ x: CGFloat?, _ y: CGFloat?) {
+        
+        self.time = time ?? 0
+        self.curve = CurveModelType(curve ?? [0, 0, 0, 0])
         self.position = CGPoint(x: x ?? 0, y: y ?? 0)
     }
     
@@ -600,7 +618,8 @@ extension BoneKeyframeTranslateModel: Decodable {
             
         } catch {
             
-            let curve: String? = try container.decodeIfPresent(String.self, forKey: .curve)
+            //let curve: String? = try container.decodeIfPresent(String.self, forKey: .curve)
+            let curve: [Float]? = try container.decodeIfPresent([Float].self, forKey: .curve)
             self.init(time, curve, x, y)
         }
     }
@@ -618,6 +637,13 @@ struct BoneKeyframeScaleModel: BoneKeyframeModel {
         
         self.time = time ?? 0
         self.curve = CurveModelType(curve)
+        self.scale = CGVector(dx: x ?? 1, dy: y ?? 1)
+    }
+    
+    init(_ time: TimeInterval?, _ curve: [Float]?, _ x: CGFloat?, _ y: CGFloat?) {
+        
+        self.time = time ?? 0
+        self.curve = CurveModelType(curve ?? [0, 0, 0, 0])
         self.scale = CGVector(dx: x ?? 1, dy: y ?? 1)
     }
     
@@ -661,7 +687,8 @@ extension BoneKeyframeScaleModel: Decodable {
             
         } catch {
             
-            let curve: String? = try container.decodeIfPresent(String.self, forKey: .curve)
+            //let curve: String? = try container.decodeIfPresent(String.self, forKey: .curve)
+            let curve: [Float]? = try container.decodeIfPresent([Float].self, forKey: .curve)
             self.init(time, curve, x, y)
         }
     }
@@ -679,6 +706,13 @@ struct BoneKeyframeShearModel: BoneKeyframeModel {
         
         self.time = time ?? 0
         self.curve = CurveModelType(curve)
+        self.shear = CGVector(dx: x ?? 0, dy: y ?? 0)
+    }
+    
+    init(_ time: TimeInterval?, _ curve: [Float]?, _ x: CGFloat?, _ y: CGFloat?) {
+        
+        self.time = time ?? 0
+        self.curve = CurveModelType(curve ?? [0, 0, 0, 0])
         self.shear = CGVector(dx: x ?? 0, dy: y ?? 0)
     }
     
@@ -722,7 +756,8 @@ extension BoneKeyframeShearModel: Decodable {
             
         } catch {
             
-            let curve: String? = try container.decodeIfPresent(String.self, forKey: .curve)
+            //let curve: String? = try container.decodeIfPresent(String.self, forKey: .curve)
+            let curve: [Float]? = try container.decodeIfPresent([Float].self, forKey: .curve)
             self.init(time, curve, x, y)
         }
     }
@@ -779,6 +814,13 @@ struct SlotKeyframeColorModel: SlotKeyframeModel, CurvedKeyframeModel {
         self.curve = CurveModelType(curve)
     }
     
+    init(_ time: TimeInterval?, _ color: String, _ curve: [Float]?) {
+        
+        self.time = time ?? 0
+        self.color = ColorModel(color)
+        self.curve = CurveModelType(curve ?? [0, 0, 0, 0])
+    }
+    
     //bezier curve type init
     init(_ time: TimeInterval?, _ color: String, _ curve: CurveModelType.BezierCurveModel) {
         
@@ -817,7 +859,8 @@ extension SlotKeyframeColorModel: Decodable {
             
         } catch {
             
-            let curve: String? = try container.decodeIfPresent(String.self, forKey: .curve)
+            //let curve: String? = try container.decodeIfPresent(String.self, forKey: .curve)
+            let curve: [Float]? = try container.decodeIfPresent([Float].self, forKey: .curve)
             self.init(time, color, curve)
         }
     }
@@ -920,6 +963,14 @@ struct DeformKeyframeModel: KeyframeModel {
         self.curve = CurveModelType(curve)
     }
     
+    init(_ time: TimeInterval?, _ offset: Int?, _ vertices: [CGFloat]?, _ curve: [Float]?) {
+        
+        self.time = time ?? 0
+        self.offset = offset ?? 0
+        self.vertices = vertices
+        self.curve = CurveModelType(curve ?? [0, 0, 0, 0])
+    }
+    
     //bezier curve type init
     init(_ time: TimeInterval?, _ offset: Int?, _ vertices: [CGFloat]?, _ curve: CurveModelType.BezierCurveModel) {
         
@@ -961,7 +1012,8 @@ extension DeformKeyframeModel: Decodable {
             
         } catch {
             
-            let curve: String? = try container.decodeIfPresent(String.self, forKey: .curve)
+            //let curve: String? = try container.decodeIfPresent(String.self, forKey: .curve)
+            let curve: [Float]? = try container.decodeIfPresent([Float].self, forKey: .curve)
             self.init(time, offset, vertices, curve)
         }
     }
@@ -1068,3 +1120,4 @@ extension DrawOrderOffsetModel: Decodable {
         self.offset = offset
     }
 }
+

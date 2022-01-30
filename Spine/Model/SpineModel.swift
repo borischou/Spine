@@ -184,7 +184,7 @@ enum CurveModelType {
         
         init?(_ values: [Float]) {
             
-            guard values.count == 4 else {
+            guard values.count >= 4 else {
                 
                 return nil
             }
@@ -253,3 +253,4 @@ struct ColorModel {
         return ColorModel(stringValue)
     }
 }
+
